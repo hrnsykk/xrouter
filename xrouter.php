@@ -4,8 +4,14 @@
 class xrouter{
 
 
+    /*
+    
+    @var array $router 
+
+    */
     private $router = [];
-    private $path ;
+    private $uri ;
+    private $method;
 
 
     public function get($path, $callback){
@@ -21,14 +27,14 @@ class xrouter{
     public function getRequestURI(){
 
 
-        return $this->path = str_replace(dirname($_SERVER['SCRIPT_NAME']) , '', $_SERVER['REQUEST_URI']);
+        return $this->uri = str_replace(dirname($_SERVER['SCRIPT_NAME']) , '', $_SERVER['REQUEST_URI']);
 
     }
     
     /* GET WHAT REQUESTED METHOD */
     public function getRequestMethod(){
 
-        return $this->path = strtolower($_SERVER['REQUEST_METHOD']);
+        return $this->method = strtolower($_SERVER['REQUEST_METHOD']);
 
     }
 
