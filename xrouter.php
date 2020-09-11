@@ -1,6 +1,7 @@
 <?php 
 
 
+
 class xrouter{
 
 
@@ -22,11 +23,17 @@ class xrouter{
 
     }
 
+    public function post($path, $callback){
+
+        $this->router['post'][$path] = $callback;
+
+    }
+
 
     /* GET WHAT REQUESTED URI */
     public function getRequestURI(){
 
-
+        
         return $this->uri = str_replace(dirname($_SERVER['SCRIPT_NAME']) , '', $_SERVER['REQUEST_URI']);
 
     }
@@ -42,27 +49,55 @@ class xrouter{
 
     public function run(){
 
-        
+                
         $paths  = $this->getRequestURI();
+
         $method = $this->getRequestMethod();
 
-      
         $callback  = $this->router[$method][$paths] ?? false ;
 
+       
 
         if($callback === false){
+
 
             echo 'Page Not Found';
             exit();
 
         }
 
-        call_user_func($callback);
+        if(is_callable($callback)){
 
+            call_user_func($callback);
+
+        }else{
+
+
+            $callback = explode('@', $callback);
+
+            $file = 'controllers/'. $callback[0] . '.php';
+
+            $class = $callback[0];
+            $method = $callback[1];
+            
+
+            if(file_exists($file)){
+
+
+                require($file);
+
+                $app = new $class();
+                $app->$method();
 
         
+            }else{
+
+                echo "Page Not Found Controller";
+
+            }
+
+        }
 
     }
-
 
 }
